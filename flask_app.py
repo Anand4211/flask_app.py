@@ -14,7 +14,9 @@ app = Flask(__name__)
 
 app.config.from_pyfile('config.py')
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
+app.config['SQLALCHEMY_DATABASE_URI'] = '{engine}://{username}:{user_password}@{host}/{db_name}'.format(
+    username=os.environ.get('DB_USERNAME'), db_name=os.environ.get('DB_NAME'), host=os.environ.get('DB_HOST'),
+    user_password=os.environ.get('DB_PASSWORD'), engine=os.environ.get('DB_ENGINE'))
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.secret_key = 'secreat keey'
@@ -114,4 +116,4 @@ def remove_movie(id):
 
 if __name__ == "__main__":
     db.create_all()
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=5000, host='0.0.0.0')
